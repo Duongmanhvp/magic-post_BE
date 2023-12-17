@@ -5,7 +5,7 @@ const {
 const { where } = require("sequelize");
 
 const userController = {
-  //REGISTER
+  // [POST] REGISTER
   register: async (req, res) => {
     const { acc_name, password } = req.body;
     const defaultRole = 1;
@@ -22,7 +22,7 @@ const userController = {
       } else {
         //Create account
         const newAccount = await Account.create({
-          account_id: 3,
+          account_id: 4,
           acc_name: acc_name,
           password: password,
           roles: defaultRole,
@@ -43,7 +43,7 @@ const userController = {
     }
   },
 
-  //LOGIN
+  //[POST] LOGIN
   login: async (req, res) => {
     try {
       console.log(req.body);
@@ -69,6 +69,61 @@ const userController = {
     }
   },
 
+  // [GET] all user
+  getAllUsers: async (req, res) => {
+    try {
+      const user = await Account.findAll();
+      return res.status(200).json(user);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  },
+
+  // [GET] Get User by ID
+  getUserByID: async (req, res) => {
+    try {
+      // const id = req.body;
+      console.log("1");
+      const user = await Account.findOne({
+        where: { account_id: req.body.id },
+      });
+      if (!user) {
+        console.log("2");
+        res.status(400).json({
+          msg: "ID didn't exist!!!",
+        });
+      } else {
+        console.log("3");
+        res.status(200).json({
+          msg: "Find successfully!!",
+          user,
+        });
+      }
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+  // Delete User
+  deleteUserByID: async (req, res) => {
+    try {
+      const user = await Account.findOne({
+        where: { account_id: req.body.id },
+      });
+      if (!user) {
+        return res.status(400).json({
+          msg: "Id didn't exist!!!",
+        });
+      } else {
+        const deletedUser = await user.destroy();
+        return res.status(200).json({
+          msg: "Deleted Successfully",
+          deletedUser,
+        });
+      }
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  },
   // TEST
   test: async (req, res) => {
     try {
