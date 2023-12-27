@@ -61,7 +61,7 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
-      acc_name: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
@@ -80,6 +80,20 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notEmpty: true,
+        },
+      },
+      phone: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        validate: {
+          notEmpty: false,
+        },
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        validate: {
+          notEmpty: false,
         },
       },
     },
