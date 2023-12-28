@@ -44,7 +44,8 @@ const parcelController = {
   // [POST] create parcels
   createParcel: async (req, res) => {
     try {
-      const { firstName, lastName, phone, address, date } = req.body;
+      const { firstName, lastName, phone, address } = req.body;
+      const date = new Date();
       console.log(1);
       const checkedCustomer = await Customer.findOne({
         where: { phone: phone },
@@ -65,6 +66,7 @@ const parcelController = {
         });
       } else {
         console.log(3);
+
         const newCustomer = await Customer.create({
           firstName: firstName,
           lastName: lastName,
@@ -106,13 +108,13 @@ const parcelController = {
   createParcelTest: async (req, res) => {
     try {
       console.log(1);
-      //const time = moment().format("YYYY-MM-DD");
+      const time = new Date();
       console.log(12);
       const code = parcelController.generateCode(15);
       console.log(11);
       const newParcel = await Parcel.create({
         customer_id: "3",
-        record_date: 2023 - 12 - 30,
+        record_date: time,
         parcel_code: code,
       });
       return res.status(200).json({

@@ -79,7 +79,8 @@ const orderController = {
   //[POST] create new order
   createNewOrder: async (req, res) => {
     try {
-      const { time, status, sendLoc, recLoc, code } = req.body;
+      const { status, sendLoc, recLoc, code } = req.body;
+      const time = new Date();
       const sendLocation = await Location.findOne({
         where: { address: sendLoc },
       });
