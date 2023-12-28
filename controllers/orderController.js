@@ -79,24 +79,33 @@ const orderController = {
   //[POST] create new order
   createNewOrder: async (req, res) => {
     try {
-      const { time, status, sendLoc, recLoc } = req.body;
+      const { time, status, sendLoc, recLoc, code } = req.body;
       const sendLocation = await Location.findOne({
         where: { address: sendLoc },
       });
       const receiveLocation = await Location.findOne({
         where: { address: recLoc },
       });
-      const newOrder = await Order.create({
-        order_date: time,
-        status: status,
-        sending_location: sendLocation.location_id,
-        receiving_location: receiveLocation.location_id,
-        parcel_id: 3,
+      const parcel = await Parcel.findOne({
+        where: { parcel_code: code },
       });
-      return res.status(200).json({
-        msg: "Find successfully!!",
-        newOrder,
-      });
+      if (!parcel) {
+        return res.status(400).json({
+          msg: "Parcel code didn't exist!!",
+        });
+      } else {
+        const newOrder = await Order.create({
+          order_date: time,
+          status: status,
+          sending_location: sendLocation.location_id,
+          receiving_location: receiveLocation.location_id,
+          parcel_id: parcel.parcel_id,
+        });
+        return res.status(200).json({
+          msg: "Create successfully!!",
+          newOrder,
+        });
+      }
     } catch (error) {
       res.status(500).json(error);
     }

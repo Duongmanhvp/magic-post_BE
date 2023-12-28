@@ -1,8 +1,10 @@
 const moment = require("moment");
+const { random } = require("mathjs");
 const {
   models: { Parcel, Customer, Account },
 } = require("../models/");
 const { where } = require("sequelize");
+
 const parcelController = {
   //[GET] get ALL
   getAllParcels: async (req, res) => {
@@ -39,19 +41,6 @@ const parcelController = {
     }
   },
 
-  // Generate parcel code
-  genCode: () => {
-    let result = "";
-    const characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * charactersLength);
-      result += characters.charAt(randomIndex);
-    }
-    return result;
-  },
-
   // [POST] create parcels
   createParcel: async (req, res) => {
     try {
@@ -64,7 +53,7 @@ const parcelController = {
         console.log(2);
         const id = checkedCustomer.customer_id;
         console.log("id :", id);
-        const code = parcelController.genCode();
+        const code = parcelController.generateCode(15);
         const newParcel = await Parcel.create({
           record_date: date,
           customer_id: id,
@@ -83,7 +72,7 @@ const parcelController = {
           address: address,
         });
         const id = newCustomer.customer_id;
-        const code = parcelController.genCode();
+        const code = parcelController.generateCode(15);
         const newParcel = await Parcel.create({
           customer_id: id,
           record_date: date,
@@ -100,16 +89,31 @@ const parcelController = {
       return res.status(500).json(error);
     }
   },
+
+  // Generate parcel code
+  generateCode(length) {
+    let result = "";
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const charactersLength = characters.length;
+
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(random() * charactersLength));
+    }
+
+    return result;
+  },
   createParcelTest: async (req, res) => {
     try {
       console.log(1);
-      // const time = moment().format("YYYY-MM-DD");
-      // const code = parcelController.genCode();
+      //const time = moment().format("YYYY-MM-DD");
+      console.log(12);
+      const code = parcelController.generateCode(15);
       console.log(11);
       const newParcel = await Parcel.create({
         customer_id: "3",
         record_date: 2023 - 12 - 30,
-        parcel_code: "zefweefbiwe",
+        parcel_code: code,
       });
       return res.status(200).json({
         msg: "Create successfully!!",
