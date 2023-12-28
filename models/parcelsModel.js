@@ -1,14 +1,15 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Parcel extends Model {
-    // static associate(models) {
-    //   Order_items.belongsTo(models.Order_details, {
-    //     foreignKey: "order_id",
-    //   });
-    //   Order_items.belongsTo(models.Product, {
-    //     foreignKey: "product_id",
-    //   });
-    // }
+    static associate(models) {
+      Parcel.belongsTo(models.Customer, {
+        foreignKey: "customer_id",
+        references: {
+          model: "Customer",
+          key: "customer_id",
+        },
+      });
+    }
   }
   Parcel.init(
     {
@@ -33,6 +34,13 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         //   autoIncrement: true,
         primaryKey: true,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      parcel_code: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
         validate: {
           notEmpty: true,
         },

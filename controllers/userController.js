@@ -2,6 +2,7 @@
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
+const authenticate = require("../middlewares/authenticate");
 const {
   models: { Account },
 } = require("../models/");
@@ -12,11 +13,8 @@ const userController = {
   // [POST] REGISTER
   register: async (req, res) => {
     const { name, password } = req.body;
-    const defaultRole = 5;
+    defaultRole = 5;
     try {
-      // const salt = await bcrypt.genSalt(10);
-      // const hashed = await bcrypt.hash(req.body.password, salt);
-
       //Check name
       const checked_name = await Account.findOne({ where: { name } });
       if (checked_name) {
@@ -36,11 +34,67 @@ const userController = {
           password: password,
           roles: defaultRole,
         });
-        // catch((err) => {
-        //   res.status(500).json(err);
-        // });
       }
-      // res.status(200).json(account);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
+
+  // [POST] REGISTER TRANSACTION
+  registerTrans: async (req, res) => {
+    const { name, password } = req.body;
+    defaultRole = 2;
+    try {
+      //Check name
+      const checked_name = await Account.findOne({ where: { name } });
+      if (checked_name) {
+        return res.status(400).json({
+          msg: "name existed!!!",
+        });
+      } else {
+        //Create account
+        const newAccount = await Account.create({
+          name: name,
+          password: password,
+          roles: defaultRole,
+        });
+        return res.status(200).json({
+          msg: "Register Account Success",
+          name: name,
+          password: password,
+          roles: defaultRole,
+        });
+      }
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
+
+  // [POST] REGISTER WAREHOUSR
+  registerWH: async (req, res) => {
+    const { name, password } = req.body;
+    defaultRole = 4;
+    try {
+      //Check name
+      const checked_name = await Account.findOne({ where: { name } });
+      if (checked_name) {
+        return res.status(400).json({
+          msg: "name existed!!!",
+        });
+      } else {
+        //Create account
+        const newAccount = await Account.create({
+          name: name,
+          password: password,
+          roles: defaultRole,
+        });
+        return res.status(200).json({
+          msg: "Register Account Success",
+          name: name,
+          password: password,
+          roles: defaultRole,
+        });
+      }
     } catch (err) {
       res.status(500).json(err);
     }
@@ -55,7 +109,7 @@ const userController = {
         role: user.roles,
       },
       process.env.JWT_ACCESS_KEY,
-      { expiresIn: "20s" }
+      { expiresIn: "2h" }
     );
   },
   genRefreshToken: (user) => {
@@ -176,6 +230,28 @@ const userController = {
       res.status(500).json(error);
     }
   },
+
+  // [GET] Get User by ID
+  getUserByRole: async (req, res) => {
+    try {
+      const user = await Account.findAll({
+        where: { roles: req.body.role },
+      });
+      if (!user) {
+        res.status(400).json({
+          msg: "No one!!!",
+        });
+      } else {
+        res.status(200).json({
+          msg: "Find successfully!!",
+          user,
+        });
+      }
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+
   // Delete User
   deleteUserByID: async (req, res) => {
     try {

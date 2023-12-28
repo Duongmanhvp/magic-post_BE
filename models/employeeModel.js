@@ -1,14 +1,16 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Employee extends Model {
-    // static associate(models) {
-    //   Order_items.belongsTo(models.Order_details, {
-    //     foreignKey: "order_id",
-    //   });
-    //   Order_items.belongsTo(models.Product, {
-    //     foreignKey: "product_id",
-    //   });
-    // }
+    static associate(models) {
+      Employee.belongsTo(models.Account, {
+        foreignKey: "account_id",
+        references: {
+          model: "Account",
+          key: "account_id",
+        },
+      });
+      Employee.hasOne(models.Account);
+    }
   }
   Employee.init(
     {
@@ -22,14 +24,14 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       firstName: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(50),
         allowNull: true,
         validate: {
           notEmpty: false,
         },
       },
       lastName: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(50),
         allowNull: false,
         validate: {
           notEmpty: true,

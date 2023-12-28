@@ -28,5 +28,25 @@ const authenticate = {
       }
     });
   },
+  isAdminTransaction: (req, res, next) => {
+    authenticate.isLogin(req, res, () => {
+      const authRole = req.user.role;
+      if (authRole == 1) {
+        next();
+      } else {
+        return res.status(403).json("Deny access ");
+      }
+    });
+  },
+  isAdminWarehouse: (req, res, next) => {
+    authenticate.isLogin(req, res, () => {
+      const authRole = req.user.role;
+      if (authRole == 3) {
+        next();
+      } else {
+        return res.status(403).json("Deny access ");
+      }
+    });
+  },
 };
 module.exports = authenticate;

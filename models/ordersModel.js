@@ -1,14 +1,29 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Order extends Model {
-    // static associate(models) {
-    //   Order_items.belongsTo(models.Order_details, {
-    //     foreignKey: "order_id",
-    //   });
-    //   Order_items.belongsTo(models.Product, {
-    //     foreignKey: "product_id",
-    //   });
-    // }
+    static associate(models) {
+      Order.belongsTo(models.Parcel, {
+        foreignKey: "parcel_id",
+        references: {
+          model: "Parcel",
+          key: "parcel_id",
+        },
+      });
+      Order.belongsTo(models.Location, {
+        foreignKey: "sending_location",
+        references: {
+          model: "Location",
+          key: "location_id",
+        },
+      });
+      Order.belongsTo(models.Parcel, {
+        foreignKey: "receiving_location",
+        references: {
+          model: "Location",
+          key: "location_id",
+        },
+      });
+    }
   }
   Order.init(
     {
@@ -29,23 +44,28 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       status: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(50),
         allowNull: false,
         validate: {
           notEmpty: true,
         },
       },
-      location1: {
+      sending_location: {
         type: DataTypes.INTEGER,
-        //   autoIncrement: true,
         allowNull: false,
         validate: {
           notEmpty: true,
         },
       },
-      location2: {
+      receiving_location: {
         type: DataTypes.INTEGER,
-        //   autoIncrement: true,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      parcel_id: {
+        type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
           notEmpty: true,

@@ -1,14 +1,15 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Location extends Model {
-    // static associate(models) {
-    //   Order_items.belongsTo(models.Order_details, {
-    //     foreignKey: "order_id",
-    //   });
-    //   Order_items.belongsTo(models.Product, {
-    //     foreignKey: "product_id",
-    //   });
-    // }
+    static associate(models) {
+      Location.belongsTo(models.Account, {
+        foreignKey: "account_id",
+        references: {
+          model: "Account",
+          key: "account_id",
+        },
+      });
+    }
   }
   Location.init(
     {
@@ -22,14 +23,14 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       address: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(1000),
         allowNull: false,
         validate: {
           notEmpty: true,
         },
       },
       type: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(50),
         allowNull: false,
         validate: {
           notEmpty: true,
