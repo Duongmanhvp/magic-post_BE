@@ -11,4 +11,10 @@ router.get("/getByID", orderController.getOrderByID);
 //[GET] get Status Orders by ID
 router.get("/getStatusByID", orderController.getStatusOrderByID);
 
+//[GET] get Orders by Status
+router.get("/getByStatus", orderController.getAllOrderByStatus);
+
+//[POST] create new Order
+router.post("/createOrder", orderController.createNewOrder);
+
 module.exports = router;

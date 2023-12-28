@@ -2,17 +2,16 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Customer extends Model {
     static associate(models) {
-      Customer.belongsTo(models.Account, {
-        foreignKey: "account_id",
-        references: {
-          model: "Account",
-          key: "account_id",
-        },
-      });
+      // Customer.belongsTo(models.Account, {
+      //   foreignKey: "account_id",
+      //   references: {
+      //     model: "Account",
+      //     key: "account_id",
+      //   },
+      // });
       Customer.hasMany(models.Parcel, {
         foreignKey: "customer_id",
       });
-      Customer.hasOne(models.Account);
     }
   }
   Customer.init(
@@ -52,14 +51,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         validate: {
           notEmpty: false,
-        },
-      },
-      account_id: {
-        type: DataTypes.INTEGER,
-        //   autoIncrement: true,
-        allowNull: false,
-        validate: {
-          notEmpty: true,
         },
       },
     },

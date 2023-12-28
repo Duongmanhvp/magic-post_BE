@@ -1,5 +1,5 @@
 const {
-  models: { Order },
+  models: { Order, Parcel, Location },
 } = require("../models/");
 const { where } = require("sequelize");
 const orderController = {
@@ -50,6 +50,53 @@ const orderController = {
           status: order.status,
         });
       }
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+
+  // [GET] get All Order by Status
+  getAllOrderByStatus: async (req, res) => {
+    try {
+      const order = await Order.findAll({
+        where: { status: req.body.status },
+      });
+      if (!order) {
+        res.status(400).json({
+          msg: "No order!!!",
+        });
+      } else {
+        res.status(200).json({
+          msg: "Find successfully!!",
+          order,
+        });
+      }
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+
+  //[POST] create new order
+  createNewOrder: async (req, res) => {
+    try {
+      const { time, status, sendLoc, recLoc } = req.body;
+      const sendLocation = await Location.findOne({
+        where: { address: sendLoc },
+      });
+      const receiveLocation = await Location.findOne({
+        where: { address: recLoc },
+      });
+      const newOrder = await Order.create({
+        order_date: time,
+        status: status,
+        sending_location: sendLocation.location_id,
+        receiving_location: receiveLocation.location_id,
+        parcel_id: 3,
+      });
+      return res.status(200).json({
+        msg: "Find successfully!!",
+        newOrder,
+      });
     } catch (error) {
       res.status(500).json(error);
     }

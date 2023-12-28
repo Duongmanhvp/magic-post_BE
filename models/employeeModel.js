@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
           key: "account_id",
         },
       });
-      Employee.hasOne(models.Account);
+      // Employee.hasOne(models.Account);
     }
   }
   Employee.init(

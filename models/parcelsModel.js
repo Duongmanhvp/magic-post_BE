@@ -32,8 +32,9 @@ module.exports = (sequelize, DataTypes) => {
       customer_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        //   autoIncrement: true,
-        primaryKey: true,
+        // unique: true,
+        // autoIncrement: true,
+        // primaryKey: true,
         validate: {
           notEmpty: true,
         },

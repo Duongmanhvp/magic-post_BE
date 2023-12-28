@@ -13,7 +13,7 @@ const userController = {
   // [POST] REGISTER
   register: async (req, res) => {
     const { name, password } = req.body;
-    defaultRole = 5;
+    const defaultRole = 5;
     try {
       //Check name
       const checked_name = await Account.findOne({ where: { name } });
