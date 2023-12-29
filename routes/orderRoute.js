@@ -14,6 +14,9 @@ router.get("/getStatusByID", orderController.getStatusOrderByID);
 //[GET] get Orders by Status
 router.get("/getByStatus", orderController.getAllOrderByStatus);
 
+//[GET] get Orders by Location
+router.get("/getByLocation", orderController.getAllOrderByReceivingLocation);
+
 //[POST] create new Order
 router.post("/createOrder", orderController.createNewOrder);
 

@@ -1,3 +1,4 @@
+const { add } = require("mathjs");
 const {
   models: { Order, Parcel, Location },
 } = require("../models/");
@@ -72,6 +73,39 @@ const orderController = {
         });
       }
     } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+
+  // [GET] get All Order by Location
+  getAllOrderByReceivingLocation: async (req, res) => {
+    try {
+      console.log(1);
+      const { location } = req.body;
+      const orders = await Order.findAll({
+        attributes: ["order_id", "order_date", "status"],
+        include: [
+          {
+            model: Location,
+            attributes: ["address"],
+            where: { location_id: location },
+          },
+          {
+            model: Parcel,
+            attributes: ["parcel_code"],
+          },
+        ],
+        where: {
+          sending_location: location,
+        },
+      });
+
+      return res.status(200).json({
+        msg: "Find successfully!!",
+        orders,
+      });
+    } catch (error) {
+      console.log(6);
       res.status(500).json(error);
     }
   },
